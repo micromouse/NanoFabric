@@ -1,23 +1,20 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-namespace SampleService.Kestrel.Controllers
-{
+namespace SampleService.Kestrel.Controllers {
     /// <summary>
     /// 测试API
     /// </summary>
-    [Route("api/[controller]")]    
-    public class ValuesController : Controller
-    {
+    [Route("api/[controller]")]
+    public class ValuesController : Controller {
         /// <summary>
         /// GET api/values
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new[] { "value1", "value2" };
+        public IEnumerable<string> Get() {
+            return new[] { "value1", "value2", "myvalue" };
         }
 
         /// <summary>
@@ -27,8 +24,7 @@ namespace SampleService.Kestrel.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [Authorize()]
-        public string Get(int id)
-        {
+        public string Get(int id) {
             return $"{id}";
         }
 
@@ -37,8 +33,7 @@ namespace SampleService.Kestrel.Controllers
         /// </summary>
         /// <param name="value"></param>
         [HttpPost]
-        public void Post([FromBody]string value)
-        {
+        public void Post([FromBody]string value) {
         }
 
         /// <summary>
@@ -47,8 +42,7 @@ namespace SampleService.Kestrel.Controllers
         /// <param name="id"></param>
         /// <param name="value"></param>
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
+        public void Put(int id, [FromBody]string value) {
         }
 
         /// <summary>
@@ -56,8 +50,7 @@ namespace SampleService.Kestrel.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+        public void Delete(int id) {
         }
     }
 }

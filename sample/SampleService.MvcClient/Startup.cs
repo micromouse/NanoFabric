@@ -123,7 +123,7 @@ namespace SampleService.MvcClient
             app.UseStaticFiles();
             app.UseConsulRegisterService(Configuration);
             app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();            
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

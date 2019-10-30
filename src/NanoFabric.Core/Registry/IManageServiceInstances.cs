@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace NanoFabric.Core
 {
+    /// <summary>
+    /// 管理服务实例接口
+    /// </summary>
     public interface IManageServiceInstances
     {
         /// <summary>

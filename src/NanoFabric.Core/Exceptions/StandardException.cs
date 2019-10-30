@@ -20,13 +20,13 @@ namespace NanoFabric.Core.Exceptions
         /// <param name="message">An message which description caused the operation to fail.</param>
         /// <param name="target">The target of the particular error (e.g., the name of the property in error), the default value is the calloer member name</param>
         /// <returns>An <see cref="StandardException"/> indicating a failed invoke operation, with a <paramref name="message"/> if applicable.</returns>
-        public static StandardException Caused(string code, string message, [CallerMemberName]string target = null) => new StandardException
-        {
-            Code = code,
-            Message = message,
-            Target = target,
-        };
-
+        public static StandardException Caused(string code, string message, [CallerMemberName]string target = null) {
+            return new StandardException {
+                Code = code,
+                Message = message,
+                Target = target,
+            };
+        }
         /// <summary>
         /// Gets or sets the code for this error.
         /// </summary>

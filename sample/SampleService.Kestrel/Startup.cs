@@ -70,6 +70,8 @@ namespace SampleService.Kestrel
 
             services.AddMvc()
                .AddMvcApiResult();
+
+            //配置转发
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =

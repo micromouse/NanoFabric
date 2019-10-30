@@ -82,7 +82,8 @@ namespace NanoFabric.AspNetCore
             return $"WebAPI_{serviceName}_{uri.Host.Replace(".", "_")}_{uri.Port}";
         }
 
-        public static RegistryInformation AddTenant(this IApplicationBuilder app, string serviceName, string version, Uri uri, Uri healthCheckUri = null, IEnumerable<string> tags = null)
+        public static RegistryInformation AddTenant(this IApplicationBuilder app, 
+            string serviceName, string version, Uri uri, Uri healthCheckUri = null, IEnumerable<string> tags = null)
         {
             if (app == null)
             {

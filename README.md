@@ -5,6 +5,9 @@
 
 nanofabric 是 nano 和 fabric的合成，nano表示微服务， fabric来自于微软的微服务框架 service fabric
 
+--启动consul
+consul.exe agent -data-dir=/data/consul/data -ui -dev -bind 127.0.0.1 -client 127.0.0.1
+
 ##  Consul : https://www.consul.io/ 
 ##  Polly  : http://www.thepollyproject.org/ 
 ##  Ocelot : https://github.com/ThreeMammals/Ocelot  

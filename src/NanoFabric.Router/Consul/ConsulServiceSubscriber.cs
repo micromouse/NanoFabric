@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace NanoFabric.Router.Consul
 {
+    /// <summary>
+    /// Consul服务订阅器
+    /// </summary>
     public class ConsulServiceSubscriber : IServiceSubscriber
     {
         private readonly IConsulClient _client;
@@ -16,9 +19,15 @@ namespace NanoFabric.Router.Consul
         private readonly string _serviceName;
         private readonly bool _passingOnly;
         private readonly bool _watch;
-
         public ulong WaitIndex;
 
+        /// <summary>
+        /// 初始化Consul服务订阅器
+        /// </summary>
+        /// <param name="client">IConsulClient</param>
+        /// <param name="serviceName">服务名</param>
+        /// <param name="consulOptions">Consul选项</param>
+        /// <param name="watch">是否观察</param>
         public ConsulServiceSubscriber(IConsulClient client, string serviceName, ConsulSubscriberOptions consulOptions,
             bool watch) : this(client, serviceName, consulOptions.Tags, consulOptions.PassingOnly, watch)
         {
@@ -78,6 +87,31 @@ namespace NanoFabric.Router.Consul
                 .ToArray();
         }
 
-        public void Dispose() { }
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <param name="disposing">是否释放资源</param>
+        protected virtual void Dispose(bool disposing) {
+            if (!disposedValue) {
+                if (disposing) {
+                    _client.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose() {
+            Dispose(true);
+        }
+        #endregion
+
+
     }
 }

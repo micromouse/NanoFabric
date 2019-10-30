@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace NanoFabric.Core
 {
+    /// <summary>
+    /// 解析服务实例
+    /// </summary>
     public interface IResolveServiceInstances
     {
         Task<IList<RegistryInformation>> FindServiceInstancesAsync();
