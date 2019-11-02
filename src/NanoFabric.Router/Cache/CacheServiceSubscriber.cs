@@ -3,17 +3,14 @@ using NanoFabric.Router.Cache.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NanoFabric.Router.Cache
-{
+namespace NanoFabric.Router.Cache {
     /// <summary>
     /// 缓存服务订阅器
     /// </summary>
-    public class CacheServiceSubscriber : IPollingServiceSubscriber
-    {
+    public class CacheServiceSubscriber : IPollingServiceSubscriber {
         private bool _disposed;
 
         private readonly ICacheClient _cache;
@@ -33,16 +30,13 @@ namespace NanoFabric.Router.Cache
         /// </summary>
         /// <param name="serviceSubscriber">服务订阅器</param>
         /// <param name="cache">缓存客户端</param>
-        public CacheServiceSubscriber(IServiceSubscriber serviceSubscriber, ICacheClient cache)
-        {
+        public CacheServiceSubscriber(IServiceSubscriber serviceSubscriber, ICacheClient cache) {
             _cache = cache;
             _serviceSubscriber = serviceSubscriber;
         }
 
-        public async Task<List<RegistryInformation>> Endpoints(CancellationToken ct = default)
-        {
-            if (_disposed)
-            {
+        public async Task<List<RegistryInformation>> Endpoints(CancellationToken ct = default) {
+            if (_disposed) {
                 throw new ObjectDisposedException(nameof(CacheServiceSubscriber));
             }
 
@@ -56,55 +50,43 @@ namespace NanoFabric.Router.Cache
         /// </summary>
         /// <param name="ct">取消Token</param>
         /// <returns>订阅任务</returns>
-        public async Task StartSubscription(CancellationToken ct = default)
-        {
-            if (_subscriptionTask == null)
-            {
+        public async Task StartSubscription(CancellationToken ct = default) {
+            if (_subscriptionTask == null) {
                 await _mutex.WaitAsync(ct).ConfigureAwait(false);
-                try
-                {
-                    if (_subscriptionTask == null)
-                    {
+                try {
+                    if (_subscriptionTask == null) {
                         var serviceUris = await _serviceSubscriber.Endpoints(ct).ConfigureAwait(false);
                         _cache.Set(_id, serviceUris);
                         _subscriptionTask = StartSubscriptionLoop(serviceUris);
                     }
-                }
-                finally
-                {
+                } finally {
                     _mutex.Release();
                 }
             }
         }
 
-        private Task StartSubscriptionLoop(List<RegistryInformation> previousEndpoints)
-        {
+        private Task StartSubscriptionLoop(List<RegistryInformation> previousEndpoints) {
             return Task.Run(async () =>
             {
-                while (!_cts.IsCancellationRequested)
-                {
-                    try
-                    {
+                while (!_cts.IsCancellationRequested) {
+                    try {
                         var currentEndpoints = await _serviceSubscriber.Endpoints(_cts.Token).ConfigureAwait(false);
-                        if (!EndpointListsMatch(previousEndpoints, currentEndpoints))
-                        {
+                        if (!EndpointListsMatch(previousEndpoints, currentEndpoints)) {
                             _cache.Set(_id, currentEndpoints);
                             EndpointsChanged?.Invoke(this, EventArgs.Empty);
                             previousEndpoints = currentEndpoints;
                         }
-                    }
-                    catch
-                    {
+                    } catch {
                         // ignore
                     }
                 }
+
+                throw new Exception("任务完成");
             }, _cts.Token);
         }
 
-        private static bool EndpointListsMatch(ICollection<RegistryInformation> endpoints1, ICollection<RegistryInformation> endpoints2)
-        {
-            if (endpoints1.Count != endpoints2.Count)
-            {
+        private static bool EndpointListsMatch(ICollection<RegistryInformation> endpoints1, ICollection<RegistryInformation> endpoints2) {
+            if (endpoints1.Count != endpoints2.Count) {
                 return false;
             }
 
@@ -112,28 +94,22 @@ namespace NanoFabric.Router.Cache
             return filteredSequence.Count() == endpoints1.Count;
         }
 
-        ~CacheServiceSubscriber()
-        {
+        ~CacheServiceSubscriber() {
             Dispose(false);
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
+        protected virtual void Dispose(bool disposing) {
+            if (_disposed) {
                 return;
             }
 
-            if (disposing)
-            {
-                if (!_cts.IsCancellationRequested)
-                {
+            if (disposing) {
+                if (!_cts.IsCancellationRequested) {
                     _cts.Cancel();
                 }
                 _cts.Dispose();

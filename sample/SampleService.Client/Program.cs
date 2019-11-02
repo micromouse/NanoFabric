@@ -1,8 +1,6 @@
-﻿using Consul;
-using DnsClient;
+﻿using DnsClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using NanoFabric.Router;
 using NanoFabric.Router.Consul;
@@ -10,19 +8,21 @@ using System;
 using System.IO;
 using System.Net.Http;
 
-internal class Program
-{
+internal class Program {
     private readonly IDnsQuery _dns;
     private static ServiceProvider _serviceProvider;
 
-    private static void Main(string[] args)
-    {
+    private static void Main(string[] args) {
         Initialize();
         IServiceSubscriberFactory subscriberFactory = _serviceProvider.GetRequiredService<IServiceSubscriberFactory>();
         // 创建ConsoleLogProvider并根据日志类目名称（CategoryName）生成Logger实例
         var logger = _serviceProvider.GetService<ILoggerFactory>().AddConsole().CreateLogger("App");
 
-        var serviceSubscriber = subscriberFactory.CreateSubscriber("SampleService_Kestrel", ConsulSubscriberOptions.Default, new NanoFabric.Router.Throttle.ThrottleSubscriberOptions() { MaxUpdatesPeriod = TimeSpan.FromSeconds(30), MaxUpdatesPerPeriod = 20 });
+        var throttleSubscriberOptions = new NanoFabric.Router.Throttle.ThrottleSubscriberOptions() {
+            MaxUpdatesPeriod = TimeSpan.FromSeconds(30),
+            MaxUpdatesPerPeriod = 20
+        };
+        var serviceSubscriber = subscriberFactory.CreateSubscriber("SampleService_Kestrel", ConsulSubscriberOptions.Default, throttleSubscriberOptions);
         serviceSubscriber.StartSubscription().ConfigureAwait(false).GetAwaiter().GetResult();
         serviceSubscriber.EndpointsChanged += async (sender, eventArgs) =>
         {
@@ -41,8 +41,7 @@ internal class Program
         System.Console.ReadLine();
     }
 
-    private static void Initialize()
-    {
+    private static void Initialize() {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
