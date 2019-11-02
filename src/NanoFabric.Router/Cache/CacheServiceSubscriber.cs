@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace NanoFabric.Router.Cache
 {
+    /// <summary>
+    /// 缓存服务订阅器
+    /// </summary>
     public class CacheServiceSubscriber : IPollingServiceSubscriber
     {
         private bool _disposed;
@@ -25,13 +28,18 @@ namespace NanoFabric.Router.Cache
 
         public event EventHandler EndpointsChanged;
 
+        /// <summary>
+        /// 初始化缓存服务订阅器
+        /// </summary>
+        /// <param name="serviceSubscriber">服务订阅器</param>
+        /// <param name="cache">缓存客户端</param>
         public CacheServiceSubscriber(IServiceSubscriber serviceSubscriber, ICacheClient cache)
         {
             _cache = cache;
             _serviceSubscriber = serviceSubscriber;
         }
 
-        public async Task<List<RegistryInformation>> Endpoints(CancellationToken ct = default(CancellationToken))
+        public async Task<List<RegistryInformation>> Endpoints(CancellationToken ct = default)
         {
             if (_disposed)
             {
@@ -43,7 +51,12 @@ namespace NanoFabric.Router.Cache
             return _cache.Get<List<RegistryInformation>>(_id);
         }
 
-        public async Task StartSubscription(CancellationToken ct = default(CancellationToken))
+        /// <summary>
+        /// 开始订阅
+        /// </summary>
+        /// <param name="ct">取消Token</param>
+        /// <returns>订阅任务</returns>
+        public async Task StartSubscription(CancellationToken ct = default)
         {
             if (_subscriptionTask == null)
             {

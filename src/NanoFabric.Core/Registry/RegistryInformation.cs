@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace NanoFabric.Core
 {
+    /// <summary>
+    /// 服务注册信息
+    /// </summary>
     public class RegistryInformation
     {
         public string Name { get; set; }

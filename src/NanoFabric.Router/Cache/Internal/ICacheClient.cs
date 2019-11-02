@@ -4,6 +4,9 @@ using System.Text;
 
 namespace NanoFabric.Router.Cache.Internal
 {
+    /// <summary>
+    /// 缓存客户端
+    /// </summary>
     public interface ICacheClient
     {
         T Get<T>(object key);

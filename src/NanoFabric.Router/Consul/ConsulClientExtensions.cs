@@ -7,10 +7,18 @@ using System.Text;
 
 namespace NanoFabric.Router.Consul
 {
+    /// <summary>
+    /// ConsulClient扩展
+    /// </summary>
     public static class ConsulClientExtensions
     {
         private const string VERSION_PREFIX = "version-";
 
+        /// <summary>
+        /// 解析Consul.ServiceEntry为服务注册信息
+        /// </summary>
+        /// <param name="serviceEntry">Consul ServiceEntry</param>
+        /// <returns>服务注册信息</returns>
         public static RegistryInformation ToEndpoint(this ServiceEntry serviceEntry)
         {
             var host = !string.IsNullOrWhiteSpace(serviceEntry.Service.Address)
