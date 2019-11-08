@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NanoFabric.Core.Exceptions;
 using System.Collections.Generic;
 
 namespace SampleService.Kestrel.Controllers {
@@ -14,6 +15,9 @@ namespace SampleService.Kestrel.Controllers {
         /// <returns></returns>
         [HttpGet]
         public IEnumerable<string> Get() {
+            var ex = StandardException.Caused("001", "001号错误");
+            ex.InnerError = StandardException.Caused("001-1", "001-1号错误");
+            ex.Throw();
             return new[] { "value1", "value2", "myvalue" };
         }
 

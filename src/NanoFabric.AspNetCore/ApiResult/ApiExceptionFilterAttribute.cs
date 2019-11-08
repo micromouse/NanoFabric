@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using NanoFabric.Core.Exceptions;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace NanoFabric.WebApi.ApiWidgets
 {
@@ -30,6 +31,7 @@ namespace NanoFabric.WebApi.ApiWidgets
                 var exception = context.Exception as StandardException;
 
                 context.Result = new ObjectResult(ApiResult.Failed(exception.InnerError, exception.InnerError.Message));
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                 // if is local request, will ip=, path=123, error= JSON, or...
                 _logger.LogWarning($"ip={context.HttpContext.Connection.RemoteIpAddress}, path={context.HttpContext.Request.Path}, error={JsonConvert.SerializeObject(exception.InnerError)}");
